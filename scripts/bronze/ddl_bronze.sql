@@ -9,133 +9,64 @@ Script Purpose:
 ================================================================================
 */
 
--- Ingesting the data from file
+-- Create table of bronze layer
 
-Create or Alter Procedure bronze.load_bronze As
-begin
-	declare @start_time datetime, @end_time datetime, @batch_start_time datetime, @batch_end_time datetime ;
-	begin try
-		set @batch_start_time = GETDATE();
-		Print'----------------------------------------------------';
-		Print'Loading Bronze Layer';
-		Print'----------------------------------------------------';
+If object_id('bronze.crm_cust_info') is not null
+	drop table bronze.crm_cust_info
+Create Table bronze.crm_cust_info(
+cst_id INT,
+cst_key Nvarchar(50),
+cst_fullname Nvarchar(50),
+cst_lastname Nvarchar(50),
+cst_material_status Nvarchar(50),
+cst_gndr Nvarchar(50),
+cst_create_date Date,
+);
 
-		Print'----------------------------------------------------';
-		Print'Loading CRM Tables';
-		Print'----------------------------------------------------';
+If object_id('bronze.crm_prd_info') is not null
+	drop table bronze.crm_prd_info
+Create Table bronze.crm_prd_info(
+prd_id INT,
+prd_key Nvarchar(50),
+prd_nm Nvarchar(50),
+prd_cost Nvarchar(50),
+prd_line Nvarchar(50),
+prd_start_dt datetime,
+prd_end_dt datetime);
 
-		Set @start_time= getdate();
-		Print'>> Truncating Table: bronze.crm_cust_info'
-		Truncate table bronze.crm_cust_info;
+If object_id('bronze.crm_sales_details') is not null
+	drop table bronze.crm_sales_details
+Create Table bronze.crm_sales_details(
+sls_ord_num Nvarchar(50),
+sls_prd_key Nvarchar(50),
+sls_cust_id INT,
+sls_order_dt INT,
+sls_ship_dt INT,
+sls_due_dt INT,
+sls_sales INT,
+sls_quantity INT,
+sls_price INT);
 
-		Print'>> Inserting Data into Table: bronze.crm_cust_info'
-		Bulk Insert bronze.crm_cust_info
-		from 'C:\Users\Suryansh\Documents\gitsql\SQL- Data-Warehouse\Project DW\sql-data-warehouse-project-main\datasets\source_crm\cust_info.csv'
-		with (
-		firstrow = 2,
-		fieldterminator = ',',
-		tablock
-		);
-		set @end_time= GETDATE()
-		Print'>>Load Duration: ' + Cast(datediff(second,@start_time, @end_time) as nvarchar) + 'seconds';
-		Print'>>--------------'
+If object_id('bronze.erp_cust_az12') is not null
+	drop table bronze.erp_cust_az12
+Create Table bronze.erp_cust_az12(
+cid Nvarchar(50),
+bdate date,
+gen Nvarchar(50)
+);
 
-		Set @start_time= getdate();
-		Print'>> Truncating Table: bronze.crm_prd_info'
-		Truncate table bronze.crm_prd_info;
+If object_id('bronze.erp_loc_a101') is not null
+	drop table bronze.erp_loc_a101
+Create Table bronze.erp_loc_a101(
+cid Nvarchar(50),
+cntry Nvarchar(50)
+);
 
-		Print'>> Inserting Data into Table: bronze.crm_prd_info'
-		Bulk Insert bronze.crm_prd_info
-		from 'C:\Users\Suryansh\Documents\gitsql\SQL- Data-Warehouse\Project DW\sql-data-warehouse-project-main\datasets\source_crm\prd_info.csv'
-		with (
-		firstrow = 2,
-		fieldterminator = ',',
-		tablock
-		);
-		set @end_time= GETDATE()
-		Print'>>Load Duration: ' + Cast(datediff(second,@start_time, @end_time) as nvarchar) + 'seconds';
-		Print'>>--------------'
-
-		Set @start_time= getdate();
-		Print'>> Truncating Table: bronze.crm_sales_details'
-		Truncate table bronze.crm_sales_details;
-
-		Print'>> Inserting Data into Table: bronze.crm_sales_details'
-		Bulk Insert bronze.crm_sales_details
-		from 'C:\Users\Suryansh\Documents\gitsql\SQL- Data-Warehouse\Project DW\sql-data-warehouse-project-main\datasets\source_crm\sales_details.csv'
-		with (
-		firstrow = 2,
-		fieldterminator = ',',
-		tablock
-		);
-		set @end_time= GETDATE()
-		Print'>>Load Duration: ' + Cast(datediff(second,@start_time, @end_time) as nvarchar) + 'seconds';
-		Print'>>--------------'
-
-		Print'----------------------------------------------------';
-		Print'Loading ERP Tables';
-		Print'----------------------------------------------------';
-
-		Set @start_time= getdate();
-		Print'>> Truncating Table: bronze.erp_cust_az12'
-		Truncate table bronze.erp_cust_az12;
-
-		Print'>> Inserting Data into Table: bronze.erp_cust_az12'
-		Bulk Insert bronze.erp_cust_az12
-		from 'C:\Users\Suryansh\Documents\gitsql\SQL- Data-Warehouse\Project DW\sql-data-warehouse-project-main\datasets\source_erp\cust_az12.csv'
-		with (
-		firstrow = 2,
-		fieldterminator = ',',
-		tablock
-		);
-		set @end_time= GETDATE()
-		Print'>>Load Duration: ' + Cast(datediff(second,@start_time, @end_time) as nvarchar) + 'seconds';
-		Print'>>--------------'
-
-		Set @start_time= getdate();
-		Print'>> Truncating Table: bronze.erp_loc_a101'
-		Truncate table bronze.erp_loc_a101;
-
-		Print'>> Inserting Data into Table: bronze.erp_loc_a101'
-		Bulk Insert bronze.erp_loc_a101
-		from 'C:\Users\Suryansh\Documents\gitsql\SQL- Data-Warehouse\Project DW\sql-data-warehouse-project-main\datasets\source_erp\loc_a101.csv'
-		with (
-		firstrow = 2,
-		fieldterminator = ',',
-		tablock
-		);
-		set @end_time= GETDATE()
-		Print'>>Load Duration: ' + Cast(datediff(second,@start_time, @end_time) as nvarchar) + 'seconds';
-		Print'>>--------------'
-
-		Set @start_time= getdate();
-		Print'>> Truncating Table: bronze.erp_px_cat_g1v2'
-		Truncate table bronze.erp_px_cat_g1v2;
-
-		Print'>> Inserting Data into Table: bronze.erp_px_cat_g1v2'
-		Bulk Insert bronze.erp_px_cat_g1v2
-		from 'C:\Users\Suryansh\Documents\gitsql\SQL- Data-Warehouse\Project DW\sql-data-warehouse-project-main\datasets\source_erp\px_cat_g1v2.csv'
-		with (
-		firstrow = 2,
-		fieldterminator = ',',
-		tablock
-		);
-		set @end_time= GETDATE()
-		Print'>>Load Duration: ' + Cast(datediff(second,@start_time, @end_time) as nvarchar) + 'seconds';
-		Print'>>--------------'
-
-		set @batch_end_time = GETDATE();
-		Print'============================================';
-		Print'Loading Bronze Layer is Completed';
-		Print'Total Load Duration: ' + cast(datediff(second, @batch_start_time,@batch_end_time) as nvarchar) + 'Seconds'
-		Print'============================================';
-	end try
-	begin catch 
-	Print'------------------------------------------'
-	Print'Error Occured During Loading Bronze Layer'
-	Print'Error Message' + Error_Message();
-	Print'Error Message' + Cast( Error_Number() as Nvarchar);
-	Print'Error Message' + Cast(Error_State() as Nvarchar);
-	Print'------------------------------------------'
-	end catch
-end
+If object_id('bronze.erp_px_cat_g1v2') is not null
+	drop table bronze.erp_px_cat_g1v2
+Create Table bronze.erp_px_cat_g1v2(
+id Nvarchar(50),
+cat Nvarchar(50),
+subcat Nvarchar(50),
+maintenance Nvarchar(50)
+);
