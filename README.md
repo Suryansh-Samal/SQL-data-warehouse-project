@@ -139,8 +139,8 @@ Data is loaded from CSV files into SQL Server and transformed through the Bronze
 # 📈 Project Progress
 
 - [x] Repository Setup
-- [ ] Bronze Layer
-- [ ] Silver Layer
+- [x] Bronze Layer
+- [x] Silver Layer
 - [ ] Gold Layer
 - [ ] Documentation
 - [ ] Analytics
