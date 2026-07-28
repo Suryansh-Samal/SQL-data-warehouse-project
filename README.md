@@ -4,8 +4,6 @@ A modern SQL Data Warehouse project built using SQL Server that demonstrates an 
 
 The project imports raw CRM and ERP datasets, transforms them into clean and standardized data, and finally creates an analytical data model optimized for reporting and business intelligence.
 
-> **Learning Project:** This project is based on the excellent SQL Data Warehouse tutorial by **Data With Baraa**. The implementation, documentation, and GitHub organization represent my own learning journey.
-
 ---
 
 # 📌 Project Objectives
@@ -116,7 +114,7 @@ SQL-Data-Warehouse/
 
 # 📊 Data Sources
 
-The project uses sample CRM and ERP datasets provided in the tutorial repository.
+The project uses sample CRM and ERP datasets.
 
 Data is loaded from CSV files into SQL Server and transformed through the Bronze, Silver, and Gold layers.
 
@@ -141,10 +139,9 @@ Data is loaded from CSV files into SQL Server and transformed through the Bronze
 - [x] Repository Setup
 - [x] Bronze Layer
 - [x] Silver Layer
-- [ ] Gold Layer
-- [ ] Documentation
-- [ ] Analytics
-
+- [x] Gold Layer
+- [x] Documentation
+      
 ---
 
 # 📚 Key Learnings
